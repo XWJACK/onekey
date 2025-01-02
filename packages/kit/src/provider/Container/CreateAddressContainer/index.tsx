@@ -10,7 +10,6 @@ import {
   appEventBus,
 } from '@onekeyhq/shared/src/eventBus/appEventBus';
 import { ETranslations } from '@onekeyhq/shared/src/locale';
-import networkUtils from '@onekeyhq/shared/src/utils/networkUtils';
 import { EAccountSelectorSceneName } from '@onekeyhq/shared/types';
 
 import backgroundApiProxy from '../../../background/instance/backgroundApiProxy';
@@ -42,6 +41,7 @@ function BasicCreateAddressDialogContent({
   onCreate,
   networkId,
   indexedAccountId,
+  deriveType,
   autoCreateAddress,
 }: {
   onCreate: (
@@ -55,10 +55,11 @@ function BasicCreateAddressDialogContent({
   ) => void;
   networkId: string;
   indexedAccountId?: string;
+  deriveType: string;
   autoCreateAddress: boolean;
 }) {
   const {
-    activeAccount: { wallet, deriveType },
+    activeAccount: { wallet },
   } = useActiveAccount({ num: 0 });
 
   return (
@@ -82,6 +83,7 @@ function CreateAddressDialogContent({
   onCreate,
   networkId,
   indexedAccountId,
+  deriveType,
   autoCreateAddress,
 }: {
   onCreate: (
@@ -95,6 +97,7 @@ function CreateAddressDialogContent({
   ) => void;
   networkId: string;
   indexedAccountId?: string;
+  deriveType: string;
   autoCreateAddress: boolean;
 }) {
   return (
@@ -109,6 +112,7 @@ function CreateAddressDialogContent({
         onCreate={onCreate}
         networkId={networkId}
         indexedAccountId={indexedAccountId}
+        deriveType={deriveType}
         autoCreateAddress={autoCreateAddress}
       />
     </AccountSelectorProviderMirror>
@@ -150,11 +154,13 @@ function BasicCreateAddressContainer() {
     ({
       networkId,
       indexedAccountId,
+      deriveType,
       promiseId,
       autoCreateAddress,
     }: {
       networkId: string;
       indexedAccountId: string;
+      deriveType: string;
       promiseId: number;
       autoCreateAddress: boolean;
     }) => {
@@ -202,6 +208,7 @@ function BasicCreateAddressContainer() {
             }}
             networkId={networkId}
             indexedAccountId={indexedAccountId}
+            deriveType={deriveType}
             autoCreateAddress={autoCreateAddress}
           />
         ),
