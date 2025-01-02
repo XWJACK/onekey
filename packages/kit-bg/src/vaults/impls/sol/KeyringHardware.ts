@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { HardwareErrorCode } from '@onekeyfe/hd-shared';
 import { PublicKey, VersionedTransaction } from '@solana/web3.js';
 import bs58 from 'bs58';
 
@@ -13,14 +14,14 @@ import type {
   ISignedTxPro,
 } from '@onekeyhq/core/src/types';
 import {
-  convertDeviceError,
-  convertDeviceResponse,
-} from '@onekeyhq/shared/src/errors/utils/deviceErrorUtils';
+  NotImplemented,
+  UnsupportedAddressTypeError,
+} from '@onekeyhq/shared/src/errors';
+import { convertDeviceResponse } from '@onekeyhq/shared/src/errors/utils/deviceErrorUtils';
 import { ETranslations } from '@onekeyhq/shared/src/locale';
 import { appLocale } from '@onekeyhq/shared/src/locale/appLocale';
 import accountUtils from '@onekeyhq/shared/src/utils/accountUtils';
 import { checkIsDefined } from '@onekeyhq/shared/src/utils/assertUtils';
-import stringUtils from '@onekeyhq/shared/src/utils/stringUtils';
 
 import { KeyringHardwareBase } from '../../base/KeyringHardwareBase';
 
@@ -204,50 +205,11 @@ export class KeyringHardware extends KeyringHardwareBase {
     );
   }
 
-  guessMessageFormat(message: Buffer) {
-    if (Object.prototype.toString.call(message) !== '[object Uint8Array]') {
-      return undefined;
-    }
-    if (stringUtils.isPrintableASCII(message)) {
-      return 0;
-    }
-    if (stringUtils.isUTF8(message)) {
-      return 1;
-    }
-    return undefined;
-  }
-
-  override async signMessage(
-    params: ISignMessageParams,
-  ): Promise<ISignedMessagePro> {
-    const HardwareSDK = await this.getHardwareSDKInstance();
-    const deviceParams = checkIsDefined(params.deviceParams);
-    const { connectId, deviceId } = deviceParams.dbDevice;
-    const dbAccount = await this.vault.getAccount();
-
-    const result = await Promise.all(
-      params.messages.map(
-        async (payload: { type: string; message: string }) => {
-          const response = await HardwareSDK.solSignMessage(
-            connectId,
-            deviceId,
-            {
-              ...params.deviceParams?.deviceCommonParams,
-              path: dbAccount.path,
-              messageHex: Buffer.from(payload.message).toString('hex'),
-              messageFormat: this.guessMessageFormat(
-                Buffer.from(payload.message),
-              ),
-            },
-          );
-
-          if (!response.success) {
-            throw convertDeviceError(response.payload);
-          }
-          return response.payload?.signature;
-        },
-      ),
+  override signMessage(params: ISignMessageParams): Promise<ISignedMessagePro> {
+    throw new NotImplemented(
+      appLocale.intl.formatMessage({
+        id: ETranslations.feedback_sol_sign_unupported_message,
+      }),
     );
-    return result.map((ret) => bs58.encode(Buffer.from(ret, 'hex')));
   }
 }
