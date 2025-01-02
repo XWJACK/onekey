@@ -5,6 +5,7 @@ import { useIntl } from 'react-intl';
 import { Button, Dialog, Toast } from '@onekeyhq/components';
 import type { IButtonProps } from '@onekeyhq/components';
 import type { IDBAccount } from '@onekeyhq/kit-bg/src/dbs/local/types';
+import type { IAccountDeriveTypes } from '@onekeyhq/kit-bg/src/vaults/types';
 import {
   EAppEventBusNames,
   appEventBus,
@@ -55,7 +56,7 @@ function BasicCreateAddressDialogContent({
   ) => void;
   networkId: string;
   indexedAccountId?: string;
-  deriveType: string;
+  deriveType: IAccountDeriveTypes;
   autoCreateAddress: boolean;
 }) {
   const {
@@ -97,7 +98,7 @@ function CreateAddressDialogContent({
   ) => void;
   networkId: string;
   indexedAccountId?: string;
-  deriveType: string;
+  deriveType: IAccountDeriveTypes;
   autoCreateAddress: boolean;
 }) {
   return (
@@ -160,7 +161,7 @@ function BasicCreateAddressContainer() {
     }: {
       networkId: string;
       indexedAccountId: string;
-      deriveType: string;
+      deriveType: IAccountDeriveTypes;
       promiseId: number;
       autoCreateAddress: boolean;
     }) => {

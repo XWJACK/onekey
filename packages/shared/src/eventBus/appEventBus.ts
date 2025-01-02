@@ -269,7 +269,7 @@ export interface IAppEventBusPayload {
     indexedAccountId: string;
     promiseId: number;
     autoCreateAddress: boolean;
-    deriveType: string;
+    deriveType: IAccountDeriveTypes;
   };
 }
 
